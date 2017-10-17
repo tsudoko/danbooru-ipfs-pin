@@ -15,7 +15,7 @@
 
 const httpEndpoint = "http://localhost:5001";
 const httpsEndpoint = ""; // not set up by default
-const gatewayRoot = "http://gateway.ipfs.io";
+const gatewayRoot = "http://localhost:8080";
 
 const endpoint = window.location.protocol === "https:" ? httpsEndpoint : httpEndpoint;
 
