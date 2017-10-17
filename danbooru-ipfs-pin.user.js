@@ -55,16 +55,18 @@ function getPostImage(callback) {
 }
 
 function addPostOption(label, callback, prepend = false, href = "#") {
+  let li = document.createElement("li");
   let a = document.createElement("a");
 
   a.innerText = label;
   a.href = href;
   a.onclick = () => { callback(); return false; };
+  li.appendChild(a);
 
   if(prepend)
-    optionList.insertBefore(a, optionList.firstChild);
+    optionList.insertBefore(li, optionList.firstChild);
   else
-    optionList.appendChild(a);
+    optionList.appendChild(li);
 }
 
 addPostOption("Pin", () => getPostImage(pin), true);
