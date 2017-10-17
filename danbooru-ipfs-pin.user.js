@@ -7,7 +7,7 @@
 // @license   http://unlicense.org/
 // ==/UserScript==
 
-// ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://danbooru.donmai.us"]'
+// ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://localhost:5001", "http://danbooru.donmai.us"]'
 // ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["POST"]'
 
 const ipfsRoot = "http://localhost:5001/api/v0";
