@@ -12,7 +12,12 @@
 
 const httpEndpoint = "http://localhost:5001";
 const httpsEndpoint = ""; // not set up by default
-const ipfsRoot = (window.location.protocol === "https:" ? httpsEndpoint : httpEndpoint) + "/api/v0";
+const endpoint = window.location.protocol === "https:" ? httpsEndpoint : httpEndpoint;
+
+if(!endpoint)
+  return;
+
+const ipfsRoot = endpoint + "/api/v0";
 
 const imageContainer = document.querySelector("#image-container");
 const postOptions = document.querySelector("#post-options");
