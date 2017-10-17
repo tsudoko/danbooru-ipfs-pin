@@ -12,6 +12,8 @@
 
 const httpEndpoint = "http://localhost:5001";
 const httpsEndpoint = ""; // not set up by default
+const gatewayRoot = "http://gateway.ipfs.io";
+
 const endpoint = window.location.protocol === "https:" ? httpsEndpoint : httpEndpoint;
 
 if(!endpoint)
@@ -38,7 +40,7 @@ function pin(data, filename) {
   r.open("POST", ipfsRoot + "/add");
   r.responseType = "json";
   r.onload = () => {
-    console.log(r.response);
+    addPostOption("Open pinned file", () => void(0), true, gatewayRoot + "/ipfs/" + r.response.Hash);
   }
   r.send(form);
 }
@@ -52,11 +54,11 @@ function getPostImage(callback) {
   r.send();
 }
 
-function addPostOption(label, callback, prepend = false) {
+function addPostOption(label, callback, prepend = false, href = "#") {
   let a = document.createElement("a");
 
   a.innerText = label;
-  a.href = "#";
+  a.href = href;
   a.onclick = () => { callback(); return false; };
 
   if(prepend)
