@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name      danbooru-ipfs-pin
 // @namespace flan
-// @match     *://danbooru.donmai.us/*
+// @match     *://danbooru.donmai.us/posts/*
 // @run-at    document-end
 // @grant     none
 // @license   http://unlicense.org/
