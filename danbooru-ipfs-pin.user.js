@@ -2,6 +2,9 @@
 // @name      danbooru-ipfs-pin
 // @namespace flan
 // @match     *://danbooru.donmai.us/posts/*
+// @match     *://hijiribe.donmai.us/posts/*
+// @match     *://sonohara.donmai.us/posts/*
+// @match     *://safebooru.donmai.us/posts/*
 // @run-at    document-end
 // @grant     none
 // @license   http://unlicense.org/
