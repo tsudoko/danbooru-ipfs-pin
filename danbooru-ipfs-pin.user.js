@@ -33,8 +33,8 @@ function basename(path) {
   return elems[elems.length - 1];
 }
 
-function pin(data, filename) {
-  const file = new File([data], filename, {type: data.type});
+function pin(data) {
+  const file = new File([data], basename(metadata.fileUrl), {type: data.type});
   ipfsAdd(file).then((r) => {
     const hash = r.Hash;
     addPostOption("Open pinned file", () => void(0), true, `${gatewayRoot}/ipfs/${hash}`);
@@ -61,14 +61,6 @@ function ipfsFilesCp(src, dest) {
   return fetch(`${ipfsRoot}/files/cp?arg=${src}&arg=${dest}`).then((r) => r.json());
 }
 
-function getPostImage(callback) {
-  let r = new XMLHttpRequest();
-  r.open("GET", metadata.fileUrl);
-  r.responseType = "blob";
-  r.onload = () => callback(r.response, basename(metadata.fileUrl));
-  r.send();
-}
-
 function addPostOption(label, callback, prepend = false, href = "#") {
   let li = document.createElement("li");
   let a = document.createElement("a");
@@ -84,4 +76,4 @@ function addPostOption(label, callback, prepend = false, href = "#") {
     optionList.appendChild(li);
 }
 
-addPostOption("Pin", () => getPostImage(pin), true);
+addPostOption("Pin", () => fetch(window.location.origin + metadata.fileUrl).then((r) => r.blob()).then(pin), true);
