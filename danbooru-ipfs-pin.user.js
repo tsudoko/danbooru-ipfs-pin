@@ -63,13 +63,12 @@ function addPostOption(label, callback, prepend = false, href = "#") {
 function pin(data) {
   const file = new File([data], basename(metadata.fileUrl), {type: data.type});
   ipfsAdd(file).then((r) => {
-    const hash = r.Hash;
-    addPostOption("Open pinned file", () => void(0), true, `${gatewayRoot}/ipfs/${hash}`);
+    addPostOption("Open pinned file", () => void(0), true, `${gatewayRoot}/ipfs/${r.Hash}`);
 
     if(!filePath)
       return;
 
-    ipfsFilesCp(`/ipfs/${hash}`, `${filePath}/${metadata.id}.${metadata.fileExt}`).then((r) => {
+    ipfsFilesCp(`/ipfs/${r.Hash}`, `${filePath}/${metadata.id}.${metadata.fileExt}`).then((r) => {
       if(r.Message)
         console.log("cp returned", r); // TODO: do something better
     });
