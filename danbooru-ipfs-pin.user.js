@@ -11,11 +11,12 @@
 // ==/UserScript==
 
 // ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://localhost:5001", "http://danbooru.donmai.us"]'
-// ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["POST"]'
+// ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["POST", "GET"]'
 
 const httpEndpoint = "http://localhost:5001";
 const httpsEndpoint = ""; // not set up by default
 const gatewayRoot = "http://localhost:8080";
+const filePath = ""; // optional, an IPFS unixfs directory to put the image into
 
 const endpoint = window.location.protocol === "https:" ? httpsEndpoint : httpEndpoint;
 
@@ -24,9 +25,7 @@ if(!endpoint)
 
 const ipfsRoot = endpoint + "/api/v0";
 
-const imageContainer = document.querySelector("#image-container");
-const postOptions = document.querySelector("#post-options");
-
+const metadata = document.querySelector("#image-container").dataset;
 const optionList = document.querySelector("#post-options ul");
 
 function basename(path) {
@@ -43,13 +42,24 @@ function pin(data, filename) {
   r.open("POST", ipfsRoot + "/add");
   r.responseType = "json";
   r.onload = () => {
-    addPostOption("Open pinned file", () => void(0), true, gatewayRoot + "/ipfs/" + r.response.Hash);
+    const hash = r.response.Hash;
+    addPostOption("Open pinned file", () => void(0), true, gatewayRoot + "/ipfs/" + hash);
+
+    if(filePath) {
+      let r = new XMLHttpRequest();
+      r.open("GET", `${ipfsRoot}/files/cp?arg=${encodeURIComponent(`/ipfs/${hash}`)}&arg=${encodeURIComponent(`${filePath}/${metadata.id}.${metadata.fileExt}`)}`);
+      r.responseType = "json";
+      r.onload = () => {
+        if(r.response.Message)
+          console.log("cp returned", r.response); // TODO: do something better
+      }
+      r.send();
+    }
   }
   r.send(form);
 }
 
 function getPostImage(callback) {
-  const metadata = imageContainer.dataset;
   let r = new XMLHttpRequest();
   r.open("GET", metadata.fileUrl);
   r.responseType = "blob";
