@@ -23,7 +23,7 @@ const endpoint = window.location.protocol === "https:" ? httpsEndpoint : httpEnd
 if(!endpoint)
   return;
 
-const ipfsRoot = endpoint + "/api/v0";
+const ipfsRoot = `${endpoint}/api/v0`;
 
 const metadata = document.querySelector("#image-container").dataset;
 const optionList = document.querySelector("#post-options ul");
@@ -37,7 +37,7 @@ function pin(data, filename) {
   const file = new File([data], filename, {type: data.type});
   ipfsAdd(file).then((r) => {
     const hash = r.Hash;
-    addPostOption("Open pinned file", () => void(0), true, gatewayRoot + "/ipfs/" + hash);
+    addPostOption("Open pinned file", () => void(0), true, `${gatewayRoot}/ipfs/${hash}`);
 
     if(!filePath)
       return;
