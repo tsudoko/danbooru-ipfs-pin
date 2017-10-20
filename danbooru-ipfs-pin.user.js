@@ -35,28 +35,29 @@ function basename(path) {
 
 function pin(data, filename) {
   const file = new File([data], filename, {type: data.type});
-  let form = new FormData();
-  form.append("file", file);
-
-  let r = new XMLHttpRequest();
-  r.open("POST", ipfsRoot + "/add");
-  r.responseType = "json";
-  r.onload = () => {
-    const hash = r.response.Hash;
+  ipfsAdd(file).then((r) => {
+    const hash = r.Hash;
     addPostOption("Open pinned file", () => void(0), true, gatewayRoot + "/ipfs/" + hash);
 
     if(filePath) {
-      let r = new XMLHttpRequest();
-      r.open("GET", `${ipfsRoot}/files/cp?arg=${encodeURIComponent(`/ipfs/${hash}`)}&arg=${encodeURIComponent(`${filePath}/${metadata.id}.${metadata.fileExt}`)}`);
-      r.responseType = "json";
-      r.onload = () => {
-        if(r.response.Message)
-          console.log("cp returned", r.response); // TODO: do something better
-      }
-      r.send();
+      ipfsFilesCp(`/ipfs/${hash}`, `${filePath}/${metadata.id}.${metadata.fileExt}`).then((r) => {
+        if(r.Message)
+          console.log("cp returned", r); // TODO: do something better
+      });
     }
-  }
-  r.send(form);
+  });
+}
+
+function ipfsAdd(file) {
+  let form = new FormData();
+  form.append("file", file);
+  return fetch(new Request(`${ipfsRoot}/add`, {method: "POST", body: form})).then((r) => r.json());
+}
+
+function ipfsFilesCp(src, dest) {
+  src = encodeURIComponent(src);
+  dest = encodeURIComponent(dest);
+  return fetch(`${ipfsRoot}/files/cp?arg=${src}&arg=${dest}`).then((r) => r.json());
 }
 
 function getPostImage(callback) {
