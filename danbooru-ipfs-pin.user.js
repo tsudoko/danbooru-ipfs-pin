@@ -69,7 +69,7 @@ function addPostOption(label, options) {
 function pin(data) {
   const file = new File([data], basename(metadata.fileUrl), {type: data.type});
   ipfsAdd(file).then((r) => {
-    addPostOption("Open pinned file", {
+    addPostOption("Open added file", {
       overrides: {href: `${gatewayRoot}/ipfs/${r.Hash}`},
       prepend: true,
     });
@@ -84,7 +84,7 @@ function pin(data) {
   });
 }
 
-addPostOption("Pin", {
+addPostOption("Add to IPFS", {
   onclick: () => fetch(window.location.origin + metadata.fileUrl).then((r) => r.blob()).then(pin),
   prepend: true,
 });
