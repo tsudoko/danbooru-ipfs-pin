@@ -49,15 +49,15 @@ function addPostOption(label, options) {
   let li = document.createElement("li");
   let a = document.createElement("a");
 
-  if(options.href)
-    a.href = options.href;
-  else
-    a.href = "#";
-
   if(options.onclick)
     a.onclick = () => { options.onclick(); return false; };
 
+  a.href = "#";
   a.innerText = label;
+
+  if(options.overrides)
+    Object.entries(options.overrides).forEach(([k, v]) => a[k] = v);
+
   li.appendChild(a);
 
   if(options.prepend)
@@ -70,7 +70,7 @@ function pin(data) {
   const file = new File([data], basename(metadata.fileUrl), {type: data.type});
   ipfsAdd(file).then((r) => {
     addPostOption("Open pinned file", {
-      href: `${gatewayRoot}/ipfs/${r.Hash}`,
+      overrides: {href: `${gatewayRoot}/ipfs/${r.Hash}`},
       prepend: true,
     });
 
