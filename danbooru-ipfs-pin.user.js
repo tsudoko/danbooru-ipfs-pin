@@ -24,6 +24,7 @@ if(!endpoint)
   throw new Error(`no endpoint specified for ${window.location.protocol}`);
 
 const ipfsRoot = `${endpoint}/api/v0`;
+const optionID = "add-to-ipfs-link";
 
 const metadata = document.querySelector("#image-container").dataset;
 const optionList = document.querySelector("#post-options ul");
@@ -67,12 +68,13 @@ function addPostOption(label, options) {
 }
 
 function pin(data) {
+  let a = document.querySelector(`#${optionID}`)
   const file = new File([data], basename(metadata.fileUrl), {type: data.type});
+
   ipfsAdd(file).then((r) => {
-    addPostOption("Open added file", {
-      overrides: {href: `${gatewayRoot}/ipfs/${r.Hash}`},
-      prepend: true,
-    });
+    a.onclick = undefined;
+    a.innerText = "Open added file";
+    a.href = `${gatewayRoot}/ipfs/${r.Hash}`;
 
     if(!filePath)
       return;
@@ -86,5 +88,6 @@ function pin(data) {
 
 addPostOption("Add to IPFS", {
   onclick: () => fetch(window.location.origin + metadata.fileUrl).then((r) => r.blob()).then(pin),
+  overrides: {id: optionID},
   prepend: true,
 });
