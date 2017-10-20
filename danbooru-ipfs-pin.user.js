@@ -42,7 +42,7 @@ function ipfsAdd(file) {
 function ipfsFilesCp(src, dest) {
   src = encodeURIComponent(src);
   dest = encodeURIComponent(dest);
-  return fetch(`${ipfsRoot}/files/cp?arg=${src}&arg=${dest}`).then((r) => r.json());
+  return fetch(`${ipfsRoot}/files/cp?arg=${src}&arg=${dest}`).then((r) => r.text()).then((t) => t ? JSON.parse(t) : {});
 }
 
 function addPostOption(label, callback, prepend = false, href = "#") {
