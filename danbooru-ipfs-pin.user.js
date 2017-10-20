@@ -21,7 +21,7 @@ const filePath = ""; // optional, an IPFS unixfs directory to put the image into
 const endpoint = window.location.protocol === "https:" ? httpsEndpoint : httpEndpoint;
 
 if(!endpoint)
-  return;
+  throw new Error(`no endpoint specified for ${window.location.protocol}`);
 
 const ipfsRoot = `${endpoint}/api/v0`;
 
